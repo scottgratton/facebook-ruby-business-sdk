@@ -16,28 +16,33 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'facebook_ads'
+# FB:AUTOGEN
 
-access_token = '<ACCESS_TOKEN>'
-app_secret = '<APP_SECRET>'
-app_id = '<APP_ID>'
-id = '<AD_ACCOUNT_ID>'
+module FacebookAds
+  # This class is auto-generated.
 
-FacebookAds.configure do |config|
-  config.access_token = access_token
-  config.app_secret = app_secret
+  # For any issues or feature requests related to this class, please let us know
+  # on github and we'll fix in our codegen framework. We'll not be able to accept
+  # pull request for this class.
+
+  class CanvasTemplate < AdObject
+
+    field :channels, 'map<string, map<string, string>>'
+    field :description, 'string'
+    field :document, 'Canvas'
+    field :id, 'string'
+    field :is_multi_tab_supportable, 'bool'
+    field :is_new, 'bool'
+    field :name, 'string'
+    field :objectives, 'hash'
+    field :owner_id, 'User'
+    field :required_capabilities, { list: 'string' }
+    field :snapshot_photo, 'Photo'
+    field :status, 'string'
+    field :sub_verticals, { list: 'string' }
+    field :verticals, 'hash'
+    has_no_post
+    has_no_delete
+
+  end
 end
-
-ad_account = FacebookAds::AdAccount.get(id)
-adsets = ad_account.adsets.create({
-    name: 'My First Adset',
-    lifetime_budget: '20000',
-    start_time: '2021-04-18T09:43:43-0700',
-    end_time: '2021-04-28T09:43:43-0700',
-    campaign_id: '<adCampaignLinkClicksID>',
-    bid_amount: '500',
-    billing_event: 'IMPRESSIONS',
-    optimization_goal: 'POST_ENGAGEMENT',
-    targeting: {'facebook_positions':['feed'],'geo_locations':{'countries':['US'],'regions':[{'key':'4081'}],'cities':[{'key':777934,'radius':10,'distance_unit':'mile'}]},'genders':[1],'age_max':24,'age_min':20,'behaviors':[{'id':6002714895372,'name':'All travelers'}],'life_events':[{'id':6002714398172,'name':'Newlywed (1 year)'}],'publisher_platforms':['facebook'],'device_platforms':['desktop']},
-    status: 'PAUSED',
-})

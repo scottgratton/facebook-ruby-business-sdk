@@ -60,8 +60,26 @@ module FacebookAds
     PERMITTED_TASKS = [
       "ADVERTISE",
       "ANALYZE",
-      "DRAFT",
+      "CASHIER_ROLE",
+      "CREATE_CONTENT",
       "MANAGE",
+      "MANAGE_JOBS",
+      "MANAGE_LEADS",
+      "MESSAGING",
+      "MODERATE",
+      "MODERATE_COMMUNITY",
+      "PAGES_MESSAGING",
+      "PAGES_MESSAGING_SUBSCRIPTIONS",
+      "PROFILE_PLUS_ADVERTISE",
+      "PROFILE_PLUS_ANALYZE",
+      "PROFILE_PLUS_CREATE_CONTENT",
+      "PROFILE_PLUS_FACEBOOK_ACCESS",
+      "PROFILE_PLUS_FULL_CONTROL",
+      "PROFILE_PLUS_MANAGE",
+      "PROFILE_PLUS_MESSAGING",
+      "PROFILE_PLUS_MODERATE",
+      "READ_PAGE_MAILBOXES",
+      "VIEW_MONETIZATION_INSIGHTS",
     ]
 
     SURVEY_BUSINESS_TYPE = [
@@ -87,6 +105,8 @@ module FacebookAds
       "PROFILE_PLUS_ADVERTISE",
       "PROFILE_PLUS_ANALYZE",
       "PROFILE_PLUS_CREATE_CONTENT",
+      "PROFILE_PLUS_FACEBOOK_ACCESS",
+      "PROFILE_PLUS_FULL_CONTROL",
       "PROFILE_PLUS_MANAGE",
       "PROFILE_PLUS_MESSAGING",
       "PROFILE_PLUS_MODERATE",
@@ -205,6 +225,7 @@ module FacebookAds
         api.has_param :sort_by, { enum: -> { AdsPixel::SORT_BY }}
       end
       edge.post 'AdsPixel' do |api|
+        api.has_param :is_crm, 'bool'
         api.has_param :name, 'string'
       end
     end
@@ -221,6 +242,7 @@ module FacebookAds
         api.has_param :ecpms, { list: 'string' }
         api.has_param :query_ids, { list: 'string' }
         api.has_param :request_id, 'string'
+        api.has_param :sync_api, 'bool'
       end
     end
 
@@ -239,14 +261,14 @@ module FacebookAds
     end
 
     has_edge :business_invoices do |edge|
-      edge.get 'OracleTransaction' do |api|
+      edge.get 'OmegaCustomerTrx' do |api|
         api.has_param :end_date, 'string'
-        api.has_param :invoice_id, 'int'
+        api.has_param :invoice_id, 'string'
         api.has_param :issue_end_date, 'string'
         api.has_param :issue_start_date, 'string'
         api.has_param :root_id, 'int'
         api.has_param :start_date, 'string'
-        api.has_param :type, { enum: -> { OracleTransaction::TYPE }}
+        api.has_param :type, { enum: -> { OmegaCustomerTrx::TYPE }}
       end
     end
 
@@ -273,10 +295,6 @@ module FacebookAds
 
     has_edge :client_ad_accounts do |edge|
       edge.get 'AdAccount'
-      edge.post 'Business' do |api|
-        api.has_param :adaccount_id, 'string'
-        api.has_param :permitted_tasks, { list: { enum: -> { Business::PERMITTED_TASKS }} }
-      end
     end
 
     has_edge :client_apps do |edge|
@@ -376,23 +394,15 @@ module FacebookAds
       end
     end
 
-    has_edge :extendedcredits do |edge|
-      edge.get 'ExtendedCredit' do |api|
-        api.has_param :order_by_is_owned_credential, 'bool'
+    has_edge :extendedcreditapplications do |edge|
+      edge.get do |api|
+        api.has_param :only_show_pending, 'bool'
       end
     end
 
-    has_edge :franchise_programs do |edge|
-      edge.post do |api|
-        api.has_param :business_asset_group, 'string'
-        api.has_param :creative_folder, 'string'
-        api.has_param :creative_spec_template_data, 'hash'
-        api.has_param :description, 'string'
-        api.has_param :end_date, 'datetime'
-        api.has_param :name, 'string'
-        api.has_param :program_approval_type, { enum: %w{APPROVAL PUBLIC }}
-        api.has_param :shared_custom_audience, 'string'
-        api.has_param :start_date, 'datetime'
+    has_edge :extendedcredits do |edge|
+      edge.get 'ExtendedCredit' do |api|
+        api.has_param :order_by_is_owned_credential, 'bool'
       end
     end
 
@@ -518,6 +528,7 @@ module FacebookAds
         api.has_param :flight_catalog_settings, 'hash'
         api.has_param :name, 'string'
         api.has_param :parent_catalog_id, 'string'
+        api.has_param :partner_integration, 'hash'
         api.has_param :store_catalog_settings, 'hash'
         api.has_param :vertical, { enum: -> { ProductCatalog::VERTICAL }}
       end
@@ -585,6 +596,10 @@ module FacebookAds
         api.has_param :request_status, { enum: -> { BusinessAgreement::REQUEST_STATUS }}
         api.has_param :requesting_business_id, 'string'
       end
+    end
+
+    has_edge :spaco_dataset_collections do |edge|
+      edge.get
     end
 
     has_edge :system_users do |edge|
